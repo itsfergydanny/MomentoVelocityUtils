@@ -1,0 +1,23 @@
+#
+# MomentoVelocityUtils by fergydanny (https://github.com/dnyferguson)
+#
+test: true
+
+# MySQL credentials. Used for various parts of this plugin
+mysql:
+  ip: 'localhost'
+  port: '3306'
+  user: 'user'
+  pass: 'pass'
+  db: 'VotePlugin'
+  maxConnections: 2
+
+# Set what words to look for in the kick reason to kick players fully
+# off of the proxy. Normal velocity behavior is to just kick them to hub.
+kicking:
+  reasons:
+    - 'kick'
+    - 'kicked'
+    - 'ban'
+    - 'banned'
+

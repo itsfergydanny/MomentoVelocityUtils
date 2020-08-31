@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Set;
 
 public class IsMyServerDeadCommand implements Command {
-    private final MomentoVelocityUtils proxy;
+    private final MomentoVelocityUtils plugin;
 
-    public IsMyServerDeadCommand(MomentoVelocityUtils proxy) {
-        this.proxy = proxy;
+    public IsMyServerDeadCommand(MomentoVelocityUtils plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class IsMyServerDeadCommand implements Command {
         if (args.length == 0) {
             int count = 0;
             Set<String> previousIps = new HashSet<>();
-            for (Player player : proxy.getProxy().getAllPlayers()) {
+            for (Player player : plugin.getServer().getAllPlayers()) {
                 String ip = player.getRemoteAddress().getAddress().getHostAddress();
                 if (previousIps.contains(ip)) {
                     continue;
