@@ -2,11 +2,13 @@ package com.dnyferguson.momentovelocityutils.tasks;
 
 import com.dnyferguson.momentovelocityutils.MomentoVelocityUtils;
 import com.dnyferguson.momentovelocityutils.utils.Chat;
+import com.velocitypowered.api.proxy.ConnectionRequestBuilder;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class RejoinTask implements Runnable {
     private MomentoVelocityUtils plugin;
@@ -46,10 +48,10 @@ public class RejoinTask implements Runnable {
 
             RegisteredServer serv = server.getServer(servName).get();
 
-
             player.sendMessage(Chat.green("Attempting to automatically send you back to " + servName + "..."));
-            plugin.getLogger().info("attempting to automatically send " + player.getUsername() + " back to " + servName + ".");
-            server.getPlayer(uuid).get().createConnectionRequest(serv);
+            plugin.getLogger().info("attempting to automatically send " + player.getUsername() + " back to " + servName + ". attempt #" + attempts.get(player.getUniqueId()));
+
+            server.getPlayer(uuid).get().createConnectionRequest(serv).fireAndForget();
         }
 
         for (UUID uuid : toRemove) {

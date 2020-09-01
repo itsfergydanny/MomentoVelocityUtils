@@ -33,8 +33,10 @@ public class PlayerKickedListener {
             RejoinConfig config = plugin.getConfig().getRejoin();
             String server = event.getServer().getServerInfo().getName();
 
-            if (config.getServersExcluded().contains(server)) {
-                return;
+            for (String excluded : config.getServersExcluded()) {
+                if (excluded.equalsIgnoreCase(server)) {
+                    return;
+                }
             }
 
             plugin.getLogger().info("queueing " + event.getPlayer().getUsername() + " to be resent to " + server + " shortly!");

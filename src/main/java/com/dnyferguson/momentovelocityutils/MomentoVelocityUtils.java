@@ -2,6 +2,7 @@ package com.dnyferguson.momentovelocityutils;
 
 import com.dnyferguson.momentovelocityutils.commands.IsMyServerDeadCommand;
 import com.dnyferguson.momentovelocityutils.config.Configuration;
+import com.dnyferguson.momentovelocityutils.listeners.PlayerConnectToServerListener;
 import com.dnyferguson.momentovelocityutils.listeners.PlayerKickedListener;
 import com.dnyferguson.momentovelocityutils.mysql.MySQL;
 import com.dnyferguson.momentovelocityutils.tasks.RejoinTask;
@@ -27,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Plugin(
@@ -40,7 +42,7 @@ public class MomentoVelocityUtils {
     private final Path folder;
     private Configuration config;
     private MySQL sql;
-    private Map<UUID, String> previousServer = new HashMap<>();
+    private Map<UUID, String> previousServer = new ConcurrentHashMap<>();
 
     @Inject
     public MomentoVelocityUtils(ProxyServer server, Logger logger, @DataDirectory Path folder) {
@@ -66,6 +68,7 @@ public class MomentoVelocityUtils {
         // register events
         EventManager em = server.getEventManager();
         em.register(this, new PlayerKickedListener(this));
+        em.register(this, new PlayerConnectToServerListener(this));
 
 
         // register commands

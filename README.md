@@ -10,4 +10,5 @@
 #### Permissions:
 * `mvu.ismyserverdead` => Access to /ismyserverdead and /ismyserverdead debug
 
-
+#### TODO:
+* add slash server functionality for example /skyblock
