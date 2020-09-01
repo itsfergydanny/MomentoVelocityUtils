@@ -21,12 +21,14 @@ public class MySQL {
         MySQLConfig config = plugin.getConfig().getMysql();
 
         HikariConfig hikari = new HikariConfig();
-        hikari.setJdbcUrl("jdbc:mysql://" + config.getIp() + ":" + config.getPort() + "/" + config.getDb());
+        hikari.setJdbcUrl("jdbc:mysql://" + config.getIp() + ":" + config.getPort() + "/" + config.getDb() + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
         hikari.setUsername(config.getUser());
         hikari.setPassword(config.getPass());
+        hikari.setDriverClassName("com.mysql.cj.jdbc.Driver");
         hikari.addDataSourceProperty("cachePrepStmts", "true");
         hikari.addDataSourceProperty("prepStmtCacheSize", "250");
         hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        hikari.setPoolName("momentovelocityutils-hikari");
         hikari.setMaximumPoolSize(config.getMaxConnections());
 
         ds = new HikariDataSource(hikari);
@@ -34,7 +36,7 @@ public class MySQL {
     }
 
     private void createTables(String db) {
-        executeStatementAsync("");
+//        executeStatementAsync("");
     }
 
     public void getResultAsync(String stmt, FindResultCallback callback) {

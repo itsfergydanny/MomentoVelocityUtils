@@ -1,7 +1,7 @@
 # MomentoVelocityUtils
 
 ### Current Features
-* This plugin will kick anyone who gets kicked from a server with a reason containing the following words: ban, banned, kick, kicked from the proxy (instead of the default behavior which is to just kick to hubs).
+* Ability to define words in the config that will be checked against a players kick reason in order to decide whether to behave normally (kick them to hub) or kick them fully off of the network. Useful for kicking/banning as velocity's default behavior is to kick to hub.
 
 #### Commands:
 * /ismyserverdead => Shows you how many unique players are currently logged in.

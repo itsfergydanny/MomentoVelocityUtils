@@ -4,6 +4,7 @@ public class Configuration {
     private boolean test;
     private MySQLConfig mysql;
     private KickingConfig kicking;
+    private RejoinConfig rejoin;
 
     public Configuration() {}
 
@@ -29,5 +30,13 @@ public class Configuration {
 
     public void setKicking(KickingConfig kicking) {
         this.kicking = kicking;
+    }
+
+    public RejoinConfig getRejoin() {
+        return rejoin;
+    }
+
+    public void setRejoin(RejoinConfig rejoin) {
+        this.rejoin = rejoin;
     }
 }

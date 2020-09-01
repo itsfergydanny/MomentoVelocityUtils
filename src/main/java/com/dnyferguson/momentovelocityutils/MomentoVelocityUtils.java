@@ -3,6 +3,8 @@ package com.dnyferguson.momentovelocityutils;
 import com.dnyferguson.momentovelocityutils.commands.IsMyServerDeadCommand;
 import com.dnyferguson.momentovelocityutils.config.Configuration;
 import com.dnyferguson.momentovelocityutils.listeners.PlayerKickedListener;
+import com.dnyferguson.momentovelocityutils.mysql.MySQL;
+import com.dnyferguson.momentovelocityutils.tasks.RejoinTask;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.EventManager;
@@ -22,6 +24,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(
         id = "momentovelocityutils",
@@ -33,6 +39,8 @@ public class MomentoVelocityUtils {
     private final Logger logger;
     private final Path folder;
     private Configuration config;
+    private MySQL sql;
+    private Map<UUID, String> previousServer = new HashMap<>();
 
     @Inject
     public MomentoVelocityUtils(ProxyServer server, Logger logger, @DataDirectory Path folder) {
@@ -50,7 +58,10 @@ public class MomentoVelocityUtils {
         logger.info("Config loaded. Test value = " + config.isTest());
         logger.info("Mysql config = " + config.getMysql().toString());
         logger.info("kick reasons = " + config.getKicking().listReasons());
+        logger.info("rejoin = " + config.getRejoin().toString());
         // end of debug
+
+        sql = new MySQL(this);
 
         // register events
         EventManager em = server.getEventManager();
@@ -61,6 +72,14 @@ public class MomentoVelocityUtils {
         CommandManager cm = server.getCommandManager();
         cm.register(new IsMyServerDeadCommand(this), "ismyserverdead");
         logger.info("Hi mate im registering commands");
+
+        // repeating task that checks joiner
+        if (config.getRejoin().isEnabled()) {
+            server.getScheduler().buildTask(this, new RejoinTask(this))
+                    .delay(config.getRejoin().getInterval(), TimeUnit.SECONDS)
+                    .repeat(config.getRejoin().getInterval(), TimeUnit.SECONDS)
+                    .schedule();
+        }
     }
 
     @Subscribe
@@ -70,7 +89,9 @@ public class MomentoVelocityUtils {
 
     @Subscribe
     public void onDisable(ProxyShutdownEvent event) {
-        // could possibly do stuff on proxy shutdown
+        if (sql != null) {
+            sql.close();
+        }
     }
 
     private void loadConfig() {
@@ -117,5 +138,9 @@ public class MomentoVelocityUtils {
 
     public Configuration getConfig() {
         return config;
+    }
+
+    public Map<UUID, String> getPreviousServer() {
+        return previousServer;
     }
 }

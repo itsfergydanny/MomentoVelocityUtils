@@ -9,7 +9,7 @@ mysql:
   port: '3306'
   user: 'user'
   pass: 'pass'
-  db: 'VotePlugin'
+  db: 'MomentoVelocityUtils'
   maxConnections: 2
 
 # Set what words to look for in the kick reason to kick players fully
@@ -20,4 +20,18 @@ kicking:
     - 'kicked'
     - 'ban'
     - 'banned'
+
+# Enable or disable auto server rejoining. Basically when a player gets kicked
+# from any server except the excluded ones, this plugin will attempt to reconnect
+# them to the server they were just one (useful for reboots).
+rejoin:
+  enabled: true
+  serversExcluded:
+    - 'hub'
+    - 'hub1'
+    - 'hub2'
+  # How often in seconds you want to try and move them back
+  interval: 30
+  # After how many attempts should we stop? Use -1 to never stop
+  attempts: 10
 
