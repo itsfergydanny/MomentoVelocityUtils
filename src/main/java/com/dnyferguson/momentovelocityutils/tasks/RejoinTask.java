@@ -35,6 +35,7 @@ public class RejoinTask implements Runnable {
 
             if (!server.getPlayer(uuid).isPresent()) {
                 toRemove.add(uuid);
+                continue;
             }
 
             Player player = server.getPlayer(uuid).get();
@@ -42,6 +43,7 @@ public class RejoinTask implements Runnable {
 
             if (!server.getServer(servName).isPresent()) {
                 toRemove.add(uuid);
+                continue;
             }
 
             RegisteredServer serv = server.getServer(servName).get();
