@@ -9,8 +9,8 @@ import com.dnyferguson.momentovelocityutils.tasks.RejoinTask;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.EventManager;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,15 +41,14 @@ public class MomentoVelocityUtils {
     private final Path folder;
     private Configuration config;
     private MySQL sql;
-    private Map<UUID, String> previousServer = new ConcurrentHashMap<>();
+    private final Map<UUID, String> previousServer = new ConcurrentHashMap<>();
 
     @Inject
     public MomentoVelocityUtils(ProxyServer server, Logger logger, @DataDirectory Path folder) {
         this.server = server;
         this.logger = logger;
         this.folder = folder;
-
-        logger.info("Hello there, it's a test plugin I made!");
+//        logger.info("PATH === " + folder.toFile().getAbsolutePath() + "/config.yml");
     }
 
     @Subscribe

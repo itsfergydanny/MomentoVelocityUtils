@@ -2,13 +2,11 @@ package com.dnyferguson.momentovelocityutils.tasks;
 
 import com.dnyferguson.momentovelocityutils.MomentoVelocityUtils;
 import com.dnyferguson.momentovelocityutils.utils.Chat;
-import com.velocitypowered.api.proxy.ConnectionRequestBuilder;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class RejoinTask implements Runnable {
     private MomentoVelocityUtils plugin;
