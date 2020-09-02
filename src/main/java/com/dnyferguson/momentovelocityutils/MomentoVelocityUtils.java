@@ -6,8 +6,11 @@ import com.dnyferguson.momentovelocityutils.listeners.PlayerConnectToServerListe
 import com.dnyferguson.momentovelocityutils.listeners.PlayerKickedListener;
 import com.dnyferguson.momentovelocityutils.mysql.MySQL;
 import com.dnyferguson.momentovelocityutils.tasks.RejoinTask;
+import com.dnyferguson.momentovelocityutils.utils.Chat;
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -15,7 +18,10 @@ import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
@@ -48,33 +54,43 @@ public class MomentoVelocityUtils {
         this.server = server;
         this.logger = logger;
         this.folder = folder;
-//        logger.info("PATH === " + folder.toFile().getAbsolutePath() + "/config.yml");
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         loadConfig();
-        // debug
-        logger.info("Config loaded. Test value = " + config.isTest());
-        logger.info("Mysql config = " + config.getMysql().toString());
-        logger.info("kick reasons = " + config.getKicking().listReasons());
-        logger.info("rejoin = " + config.getRejoin().toString());
-        // end of debug
 
         sql = new MySQL(this);
 
-        // register events
+        // Register Events
         EventManager em = server.getEventManager();
         em.register(this, new PlayerKickedListener(this));
         em.register(this, new PlayerConnectToServerListener(this));
 
 
-        // register commands
+        // Register Commands
         CommandManager cm = server.getCommandManager();
         cm.register(new IsMyServerDeadCommand(this), "ismyserverdead");
         logger.info("Hi mate im registering commands");
 
-        // repeating task that checks joiner
+        // Slash Server
+        if (config.getSlashserver().isEnabled()) {
+            for (RegisteredServer registeredServer : server.getAllServers()) {
+                String serverName = registeredServer.getServerInfo().getName();
+                cm.register(new Command() {
+                    @Override
+                    public void execute(CommandSource source, @NonNull String[] args) {
+                        if (source instanceof Player) {
+                            Player player = (Player) source;
+                            player.sendMessage(Chat.green("Sending you to " + serverName + "..."));
+                            player.createConnectionRequest(registeredServer).fireAndForget();
+                        }
+                    }
+                }, serverName);
+            }
+        }
+
+        // Register Repeating Rejoin Check Task
         if (config.getRejoin().isEnabled()) {
             server.getScheduler().buildTask(this, new RejoinTask(this))
                     .delay(config.getRejoin().getInterval(), TimeUnit.SECONDS)

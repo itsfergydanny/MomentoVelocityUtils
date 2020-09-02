@@ -5,6 +5,7 @@ public class Configuration {
     private MySQLConfig mysql;
     private KickingConfig kicking;
     private RejoinConfig rejoin;
+    private SlashServerConfig slashserver;
 
     public Configuration() {}
 
@@ -38,5 +39,13 @@ public class Configuration {
 
     public void setRejoin(RejoinConfig rejoin) {
         this.rejoin = rejoin;
+    }
+
+    public SlashServerConfig getSlashserver() {
+        return slashserver;
+    }
+
+    public void setSlashserver(SlashServerConfig slashserver) {
+        this.slashserver = slashserver;
     }
 }

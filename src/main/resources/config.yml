@@ -35,3 +35,6 @@ rejoin:
   # After how many attempts should we stop? Use -1 to never stop
   attempts: 10
 
+# Enable or disable slash server. For example if you have a server called skyblock, this enables players to do /skyblock which will behave the same way as /server skyblock
+slashserver:
+  enabled: true
